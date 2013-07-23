@@ -1,0 +1,64 @@
+﻿{	
+	"Definitions":[
+		{
+			"RootFolder": "../../../../../../src/html/main/js",
+			"SubFolders":[  
+							"def",
+                            "models",
+                            "common",
+                            "controllers",
+                            "directives",
+                            "services",
+                            "filters",
+                            "data"
+						],
+			"NameOfDefFile":"_all.d.ts"
+		},
+		{
+			"RootFolder": "../../../../../../src/html/shared/js",
+			"SubFolders":[  							
+                            "common",
+                            "data",
+                            "interfaces",
+                            "services"
+						],
+			"NameOfDefFile":"_all.d.ts"
+		}
+	],
+    "Dependencies":[
+      {
+        "Name":"App",
+		"RelativePath":" ..\..\..\..\..\..\..\..\src\html\main",
+		"IndexPage":"Default.aspx",
+		"DependsOnNames":["Shared"],
+		"ExcludeFolders":["tests", "locale"],
+		"ExcludeNames":["app.compiled.min.js", "app.compiled.js"]
+      },
+      {
+        "Name":"SharedCommon",
+		"RelativePath":" ..\..\..\..\..\..\..\..\src\html\shared\js\common",	
+		"DependsOnNames":[]
+      },
+	  {
+        "Name":"SharedData",
+		"RelativePath":" ..\..\..\..\..\..\..\..\src\html\shared\js\data",	
+		"DependsOnNames":[]
+      },
+	  {
+        "Name":"SharedServices",
+		"RelativePath":" ..\..\..\..\..\..\..\..\src\html\shared\js\services",	
+		"DependsOnNames":[]
+      },	  
+	  {
+        "Name":"Shared",		
+		"DependsOnNames":["SharedCommon", "SharedData", "SharedServices"]
+      },
+	  {
+        "Name":"E2E Mock",
+		"RelativePath":" ..\..\..\..\..\..\..\..\src\html\main\tests",
+		"IndexPage":"Default.aspx",
+		"DependsOnNames":["App", "Shared" ],
+		"ExcludeFolders":["e2e", "unitTests"]
+      }	   
+    ]
+}
