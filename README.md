@@ -4,9 +4,10 @@ TypeScript .d.ts and html javascript scripts dependency builder
 This project does two things
 
 1. Populates an html page with javascript script blocks based on a configured list of dependencies that contain the js source files that should be put into the html page.
+
 2. Builds out an aggregate .d.ts file for a group of folders so you can use a single typescript reference path instead of having to manually manage your reference paths
 
-Lets look at each thing individually.  
+Lets look at each thing individually, but first the basics.
 
 Usage
 ---
@@ -17,9 +18,36 @@ Usage
 
 Configuration
 ----
-First, the application has a dependency configuration.  Here is a sample one (that I've been using it for).  
+First, the application has a dependency configuration.  Below is the config backing classes. The config is formatted as JSON
 
+```csharp
+public class Config
+{        
+    public List<Dependency> Dependencies { get; set; }
+    public List<DefinitionsFileConfig> Definitions { get; set; }
+}
+
+public class DefinitionsFileConfig
+{
+    public string RootFolder { get; set; }
+    public List<string> SubFolders { get; set; }
+    public string NameOfDefFile { get; set; }
+}
+
+public class Dependency
+{
+    public String Name { get; set; }
+    public String RelativePath { get; set; }
+    public String IndexPage { get; set; }
+    public List<string> DependsOnNames { get; set; }
+    public List<string> ExcludeFolders { get; set; }
+    public List<string> ExcludeNames { get; set; } 
+}
 ```
+
+Here is a sample JSON configuration that I used in my project:
+
+```json
 {	
 	"Definitions":[
 		{
@@ -89,48 +117,7 @@ First, the application has a dependency configuration.  Here is a sample one (th
 Build html page javascript dependencies
 ---
 
-Looking at the second block:
-
-```
-{	
-    "Dependencies":[
-      {
-        "Name":"App",
-		"RelativePath":" ..\..\..\..\..\..\..\..\src\html\main",
-		"IndexPage":"Default.aspx",
-		"DependsOnNames":["Shared"],
-		"ExcludeFolders":["tests", "locale"],
-		"ExcludeNames":["app.compiled.min.js", "app.compiled.js"]
-      },
-      {
-        "Name":"SharedCommon",
-		"RelativePath":" ..\..\..\..\..\..\..\..\src\html\shared\js\common",	
-		"DependsOnNames":[]
-      },
-	  {
-        "Name":"SharedData",
-		"RelativePath":" ..\..\..\..\..\..\..\..\src\html\shared\js\data",	
-		"DependsOnNames":[]
-      },
-	  {
-        "Name":"SharedServices",
-		"RelativePath":" ..\..\..\..\..\..\..\..\src\html\shared\js\services",	
-		"DependsOnNames":[]
-      },	  
-	  {
-        "Name":"Shared",		
-		"DependsOnNames":["SharedCommon", "SharedData", "SharedServices"]
-      },
-	  {
-        "Name":"E2E Mock",
-		"RelativePath":" ..\..\..\..\..\..\..\..\src\html\main\tests",
-		"IndexPage":"Default.aspx",
-		"DependsOnNames":["App", "Shared" ],
-		"ExcludeFolders":["e2e", "unitTests"]
-      }	   
-    ]
-}
-```
+Let me describe the `Dependencies` block in the JSON.
 
 This section lets you define all the related javascript files that are under the relative path of an application as well as any separate dependencies.  Anything that has an index page defined will get their index page updated.  The idea here is that when you are working on an application (lets say using angularjs) and you are adding lots of JS files that need to be frequently added to the index page for loading, to automate that task for you.  
 
@@ -169,40 +156,11 @@ But it'd be easy to pass in that later.
 Building Typescript Definition Files
 ---
 
-The first part of the configuration looks like this:
+This is described by the `Definitions` JSON block.
 
-```
-"Definitions":[
-		{
-			"RootFolder": "../../../../../../src/html/main/js",
-			"SubFolders":[  
-							"def",
-                            "models",
-                            "common",
-                            "controllers",
-                            "directives",
-                            "services",
-                            "filters",
-                            "data"
-						],
-			"NameOfDefFile":"_all.d.ts"
-		},
-		{
-			"RootFolder": "../../../../../../src/html/shared/js",
-			"SubFolders":[  							
-                            "common",
-                            "data",
-                            "interfaces",
-                            "services"
-						],
-			"NameOfDefFile":"_all.d.ts"
-		}
-]
-```
+The `Definitions` block configures the definitions builder on how to build out a definitions file that would look something like this (this is from my own project), in a file called `_all.d.ts`:
 
-This configures the definitions builder on how to build out a definitions file that would look like this, in a file called `_all.d.ts`:
-
-```
+```ts
 /// <reference path="../def/definitions.d.ts" />
 
 // --------COMMON--------
@@ -234,13 +192,13 @@ This configures the definitions builder on how to build out a definitions file t
 
 Now in your typescript files you just need to reference 
 
-```
-/// <reference path="../_all.d.ts" />
+```ts
+/// <reference path="_all.d.ts" />
 ```
 
 Without having to worry about updating it with all your files. You can create multiple definition aggregates.  Just like in the index page builder, the builder looks for 
 
-```
+```ts
 // --------IDENTIFIER--------
 	... stuff ...
 // --------END IDENTIFIER--------
