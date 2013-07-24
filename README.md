@@ -151,7 +151,67 @@ Also, the ordering of the script files in the page blocks uses a custom sort, wh
 "unittests"
 ```
 
-But it'd be easy to pass in that later.
+As an example, here is an index page that has auto generated dependencies listed:
+
+```html
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+
+        <script src="../shared/js/vendor/modernizr-2.6.2.min.js"></script>
+        <script src="../shared/js/vendor/jquery-1.9.1.min.js"></script>
+        <script src="../shared/js/vendor/jquery-ui-1.10.3/ui/jquery-ui.js"></script>
+        <script src="../shared/js/vendor/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js"></script>
+        <script src="../shared/js/vendor/json2.js" type="text/javascript"></script>
+        <script src="../shared/js/vendor/angular/angular.js"></script>
+        <script src="../shared/js/vendor/angular/angular-cookies.js"></script>
+        <script src="../shared/js/vendor/angular/angular-ui.js"></script>
+
+        <script src="../shared/js/angular.extend.js"></script>
+        <script src="../shared/js/vendor/underscore/underscore.js"></script>
+
+         <script type="text/javascript" src="../shared/js/vendor/signalr/jquery.signalR-0.5.2.min.js" ></script>
+
+         <!-- GENERATED LOCAL DATA OUT START -->
+         <script src="../shared/js/common/utils/MiscUtil.js"></script>
+         <script src="../shared/js/common/utils/StringUtil.js"></script>
+         <script src="../shared/js/common/utils/VideoUtil.js"></script>
+         <script src="../shared/js/common/model/ServiceBase.js"></script>
+         <script src="../shared/js/common/model/ControllerBase.js"></script>
+         <script src="../shared/js/common/model/DirectiveBase.js"></script>
+         <script src="../shared/js/common/model/FilterBase.js"></script>
+         <script src="../shared/js/common/model/AngularGlobal.js"></script>
+         <script src="ngGlobal.js"></script>         
+         <script src="js/data/UserData.js"></script>        
+         <script src="js/models/UserModel.js"></script>
+         <script src="js/services/LocaleService.js"></script>
+         <script src="js/services/LogoutService.js"></script>
+         <script src="js/common/interceptors/HttpInterceptor.js"></script>
+         <script src="js/controllers/LoginController.js"></script>
+         <script src="js/controllers/MainController.js"></script>
+         <script src="js/directives/PageControl.js"></script>
+         <script src="js/directives/MenuNav.js"></script>
+         <script src="js/app.js"></script>
+         <!-- GENERATED LOCAL DATA OUT END -->
+
+
+    <script>
+
+
+           $(document).ready(function(){
+                var main = new com.devshorts.angularInitializer();
+                
+                // when all is done, execute bootstrap angular application
+                angular.bootstrap(document, [NG_GLOBAL.APP_NAME]);
+            });
+        </script>
+</head>
+<body ng-cloak ng-app>
+    <div ng-view>
+        <!-- partials loaded here -->
+    </div>
+</body>
+</html>
+```
 
 Building Typescript Definition Files
 ---
